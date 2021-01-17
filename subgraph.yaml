@@ -1,0 +1,45 @@
+specVersion: 0.0.2
+description: SecurityToken for Ethereum
+repository: https://github.com/andrewhong5297/Lucidity-Neg-Tracking
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: BidTrackerFactory
+    network: mainnet
+    source:
+      address: "0xC1140b6816595fC784544aF73ef7703eeb753d64"
+      abi: BidTrackerFactory
+      startBlock: 1
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Project
+      abis:
+        - name: BidTrackerFactory
+          file: ./abis/BidTrackerFactory.json
+      eventHandlers:
+        - event: NewProject(string,address,address,uint256[],uint256[])
+          handler: handleNewProject
+      file: ./src/mapping.ts
+templates:
+  - kind: ethereum/contract
+    name: BidTracker
+    network: mainnet
+    source:
+      abi: BidTracker
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Bids
+      abis:
+        - name: BidTracker
+          file: ./abis/BidTracker.json
+      eventHandlers:
+        - event: newBidSent(address,uint256[],uint256[])
+          handler: handleNewBid
+      file: ./src/mapping.ts
