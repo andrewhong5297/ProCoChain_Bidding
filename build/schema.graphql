@@ -1,0 +1,21 @@
+type Project @entity {
+  id: ID!
+  name: ID!
+  ownerAddress: ID!
+  projectAddress: ID!
+  allBids: [Bids!] @derivedFrom(field: "project")
+  originalSpeedTargets: [BigInt!]
+  originalBounties: [BigInt!]
+  speedTarget: BigInt!
+}
+
+type Bids @entity {
+  id: ID!
+  project: Project!
+  bidderAddress: ID!
+  bidDate: Int!
+  speedTargetsBidder: [BigInt!]
+  bountiesBidder: [BigInt!]
+  speedTarget: BigInt!
+  streamAmount: BigInt!
+}
