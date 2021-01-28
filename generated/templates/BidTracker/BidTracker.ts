@@ -45,28 +45,43 @@ export class newBidSent__Params {
     return this._event.parameters[0].value.toAddress();
   }
 
-  get speedtargetBidder(): Array<BigInt> {
-    return this._event.parameters[1].value.toBigIntArray();
+  get speedTargetBidder(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
   }
 
-  get targetbountyBidder(): Array<BigInt> {
+  get bountySpeedTargets(): Array<BigInt> {
     return this._event.parameters[2].value.toBigIntArray();
+  }
+
+  get bounties(): Array<BigInt> {
+    return this._event.parameters[3].value.toBigIntArray();
   }
 }
 
 export class BidTracker__loadBidderTermsResult {
   value0: Array<BigInt>;
   value1: Array<BigInt>;
+  value2: BigInt;
+  value3: BigInt;
 
-  constructor(value0: Array<BigInt>, value1: Array<BigInt>) {
+  constructor(
+    value0: Array<BigInt>,
+    value1: Array<BigInt>,
+    value2: BigInt,
+    value3: BigInt
+  ) {
     this.value0 = value0;
     this.value1 = value1;
+    this.value2 = value2;
+    this.value3 = value3;
   }
 
   toMap(): TypedMap<string, ethereum.Value> {
     let map = new TypedMap<string, ethereum.Value>();
     map.set("value0", ethereum.Value.fromUnsignedBigIntArray(this.value0));
     map.set("value1", ethereum.Value.fromUnsignedBigIntArray(this.value1));
+    map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
+    map.set("value3", ethereum.Value.fromUnsignedBigInt(this.value3));
     return map;
   }
 }
@@ -74,16 +89,27 @@ export class BidTracker__loadBidderTermsResult {
 export class BidTracker__loadOwnerTermsResult {
   value0: Array<BigInt>;
   value1: Array<BigInt>;
+  value2: BigInt;
+  value3: BigInt;
 
-  constructor(value0: Array<BigInt>, value1: Array<BigInt>) {
+  constructor(
+    value0: Array<BigInt>,
+    value1: Array<BigInt>,
+    value2: BigInt,
+    value3: BigInt
+  ) {
     this.value0 = value0;
     this.value1 = value1;
+    this.value2 = value2;
+    this.value3 = value3;
   }
 
   toMap(): TypedMap<string, ethereum.Value> {
     let map = new TypedMap<string, ethereum.Value>();
     map.set("value0", ethereum.Value.fromUnsignedBigIntArray(this.value0));
     map.set("value1", ethereum.Value.fromUnsignedBigIntArray(this.value1));
+    map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
+    map.set("value3", ethereum.Value.fromUnsignedBigInt(this.value3));
     return map;
   }
 }
@@ -114,19 +140,46 @@ export class BidTracker extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
-  basePrice(): i32 {
-    let result = super.call("basePrice", "basePrice():(uint16)", []);
+  bountySpeedTargetOwner(param0: BigInt): BigInt {
+    let result = super.call(
+      "bountySpeedTargetOwner",
+      "bountySpeedTargetOwner(uint256):(uint256)",
+      [ethereum.Value.fromUnsignedBigInt(param0)]
+    );
 
-    return result[0].toI32();
+    return result[0].toBigInt();
   }
 
-  try_basePrice(): ethereum.CallResult<i32> {
-    let result = super.tryCall("basePrice", "basePrice():(uint16)", []);
+  try_bountySpeedTargetOwner(param0: BigInt): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "bountySpeedTargetOwner",
+      "bountySpeedTargetOwner(uint256):(uint256)",
+      [ethereum.Value.fromUnsignedBigInt(param0)]
+    );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
     let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toI32());
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  cast(number: BigInt): BigInt {
+    let result = super.call("cast", "cast(uint256):(int96)", [
+      ethereum.Value.fromUnsignedBigInt(number)
+    ]);
+
+    return result[0].toBigInt();
+  }
+
+  try_cast(number: BigInt): ethereum.CallResult<BigInt> {
+    let result = super.tryCall("cast", "cast(uint256):(int96)", [
+      ethereum.Value.fromUnsignedBigInt(number)
+    ]);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   getAllBidderAddresses(): Array<Address> {
@@ -155,13 +208,15 @@ export class BidTracker extends ethereum.SmartContract {
   loadBidderTerms(_bidder: Address): BidTracker__loadBidderTermsResult {
     let result = super.call(
       "loadBidderTerms",
-      "loadBidderTerms(address):(uint256[],uint256[])",
+      "loadBidderTerms(address):(uint256[],uint256[],uint256,uint256)",
       [ethereum.Value.fromAddress(_bidder)]
     );
 
     return new BidTracker__loadBidderTermsResult(
       result[0].toBigIntArray(),
-      result[1].toBigIntArray()
+      result[1].toBigIntArray(),
+      result[2].toBigInt(),
+      result[3].toBigInt()
     );
   }
 
@@ -170,7 +225,7 @@ export class BidTracker extends ethereum.SmartContract {
   ): ethereum.CallResult<BidTracker__loadBidderTermsResult> {
     let result = super.tryCall(
       "loadBidderTerms",
-      "loadBidderTerms(address):(uint256[],uint256[])",
+      "loadBidderTerms(address):(uint256[],uint256[],uint256,uint256)",
       [ethereum.Value.fromAddress(_bidder)]
     );
     if (result.reverted) {
@@ -180,7 +235,9 @@ export class BidTracker extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(
       new BidTracker__loadBidderTermsResult(
         value[0].toBigIntArray(),
-        value[1].toBigIntArray()
+        value[1].toBigIntArray(),
+        value[2].toBigInt(),
+        value[3].toBigInt()
       )
     );
   }
@@ -188,20 +245,22 @@ export class BidTracker extends ethereum.SmartContract {
   loadOwnerTerms(): BidTracker__loadOwnerTermsResult {
     let result = super.call(
       "loadOwnerTerms",
-      "loadOwnerTerms():(uint256[],uint256[])",
+      "loadOwnerTerms():(uint256[],uint256[],uint256,uint256)",
       []
     );
 
     return new BidTracker__loadOwnerTermsResult(
       result[0].toBigIntArray(),
-      result[1].toBigIntArray()
+      result[1].toBigIntArray(),
+      result[2].toBigInt(),
+      result[3].toBigInt()
     );
   }
 
   try_loadOwnerTerms(): ethereum.CallResult<BidTracker__loadOwnerTermsResult> {
     let result = super.tryCall(
       "loadOwnerTerms",
-      "loadOwnerTerms():(uint256[],uint256[])",
+      "loadOwnerTerms():(uint256[],uint256[],uint256,uint256)",
       []
     );
     if (result.reverted) {
@@ -211,9 +270,30 @@ export class BidTracker extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(
       new BidTracker__loadOwnerTermsResult(
         value[0].toBigIntArray(),
-        value[1].toBigIntArray()
+        value[1].toBigIntArray(),
+        value[2].toBigInt(),
+        value[3].toBigInt()
       )
     );
+  }
+
+  oracleAddress(): Address {
+    let result = super.call("oracleAddress", "oracleAddress():(address)", []);
+
+    return result[0].toAddress();
+  }
+
+  try_oracleAddress(): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "oracleAddress",
+      "oracleAddress():(address)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
   owner(): Address {
@@ -261,21 +341,21 @@ export class BidTracker extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toString());
   }
 
-  speedtargetOwner(param0: BigInt): BigInt {
+  speedTargetOwner(): BigInt {
     let result = super.call(
-      "speedtargetOwner",
-      "speedtargetOwner(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(param0)]
+      "speedTargetOwner",
+      "speedTargetOwner():(uint256)",
+      []
     );
 
     return result[0].toBigInt();
   }
 
-  try_speedtargetOwner(param0: BigInt): ethereum.CallResult<BigInt> {
+  try_speedTargetOwner(): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
-      "speedtargetOwner",
-      "speedtargetOwner(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(param0)]
+      "speedTargetOwner",
+      "speedTargetOwner():(uint256)",
+      []
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -284,20 +364,43 @@ export class BidTracker extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  targetbountyOwner(param0: BigInt): BigInt {
+  streamAmountOwner(): BigInt {
     let result = super.call(
-      "targetbountyOwner",
-      "targetbountyOwner(uint256):(uint256)",
+      "streamAmountOwner",
+      "streamAmountOwner():(uint256)",
+      []
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_streamAmountOwner(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "streamAmountOwner",
+      "streamAmountOwner():(uint256)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  targetBountyOwner(param0: BigInt): BigInt {
+    let result = super.call(
+      "targetBountyOwner",
+      "targetBountyOwner(uint256):(uint256)",
       [ethereum.Value.fromUnsignedBigInt(param0)]
     );
 
     return result[0].toBigInt();
   }
 
-  try_targetbountyOwner(param0: BigInt): ethereum.CallResult<BigInt> {
+  try_targetBountyOwner(param0: BigInt): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
-      "targetbountyOwner",
-      "targetbountyOwner(uint256):(uint256)",
+      "targetBountyOwner",
+      "targetBountyOwner(uint256):(uint256)",
       [ethereum.Value.fromUnsignedBigInt(param0)]
     );
     if (result.reverted) {
@@ -356,16 +459,28 @@ export class ConstructorCall__Inputs {
     return this._call.inputValues[2].value.toAddress();
   }
 
-  get _name(): string {
-    return this._call.inputValues[3].value.toString();
+  get _ERC20(): Address {
+    return this._call.inputValues[3].value.toAddress();
   }
 
-  get _speedtargets(): Array<BigInt> {
-    return this._call.inputValues[4].value.toBigIntArray();
+  get _name(): string {
+    return this._call.inputValues[4].value.toString();
+  }
+
+  get _bountySpeedTargets(): Array<BigInt> {
+    return this._call.inputValues[5].value.toBigIntArray();
   }
 
   get _bounties(): Array<BigInt> {
-    return this._call.inputValues[5].value.toBigIntArray();
+    return this._call.inputValues[6].value.toBigIntArray();
+  }
+
+  get _streamSpeedTarget(): BigInt {
+    return this._call.inputValues[7].value.toBigInt();
+  }
+
+  get _streamAmountTotal(): BigInt {
+    return this._call.inputValues[8].value.toBigInt();
   }
 }
 
@@ -396,6 +511,14 @@ export class ApproveBidderTermsCall__Inputs {
 
   get _bidder(): Address {
     return this._call.inputValues[0].value.toAddress();
+  }
+
+  get token(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+
+  get endTime(): BigInt {
+    return this._call.inputValues[2].value.toBigInt();
   }
 }
 
@@ -487,6 +610,44 @@ export class CallSplitPositionCall__Outputs {
   }
 }
 
+export class EndFlowCall extends ethereum.Call {
+  get inputs(): EndFlowCall__Inputs {
+    return new EndFlowCall__Inputs(this);
+  }
+
+  get outputs(): EndFlowCall__Outputs {
+    return new EndFlowCall__Outputs(this);
+  }
+}
+
+export class EndFlowCall__Inputs {
+  _call: EndFlowCall;
+
+  constructor(call: EndFlowCall) {
+    this._call = call;
+  }
+
+  get token(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get sender(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+
+  get receiver(): Address {
+    return this._call.inputValues[2].value.toAddress();
+  }
+}
+
+export class EndFlowCall__Outputs {
+  _call: EndFlowCall;
+
+  constructor(call: EndFlowCall) {
+    this._call = call;
+  }
+}
+
 export class NewBidderTermsCall extends ethereum.Call {
   get inputs(): NewBidderTermsCall__Inputs {
     return new NewBidderTermsCall__Inputs(this);
@@ -504,12 +665,20 @@ export class NewBidderTermsCall__Inputs {
     this._call = call;
   }
 
-  get _speedtargets(): Array<BigInt> {
+  get _bountySpeedTargets(): Array<BigInt> {
     return this._call.inputValues[0].value.toBigIntArray();
   }
 
   get _bounties(): Array<BigInt> {
     return this._call.inputValues[1].value.toBigIntArray();
+  }
+
+  get _streamSpeedTarget(): BigInt {
+    return this._call.inputValues[2].value.toBigInt();
+  }
+
+  get _streamAmountTotal(): BigInt {
+    return this._call.inputValues[3].value.toBigInt();
   }
 }
 
@@ -521,46 +690,50 @@ export class NewBidderTermsCall__Outputs {
   }
 }
 
-export class SetPositionsCall extends ethereum.Call {
-  get inputs(): SetPositionsCall__Inputs {
-    return new SetPositionsCall__Inputs(this);
+export class RecieveERC20Call extends ethereum.Call {
+  get inputs(): RecieveERC20Call__Inputs {
+    return new RecieveERC20Call__Inputs(this);
   }
 
-  get outputs(): SetPositionsCall__Outputs {
-    return new SetPositionsCall__Outputs(this);
+  get outputs(): RecieveERC20Call__Outputs {
+    return new RecieveERC20Call__Outputs(this);
   }
 }
 
-export class SetPositionsCall__Inputs {
-  _call: SetPositionsCall;
+export class RecieveERC20Call__Inputs {
+  _call: RecieveERC20Call;
 
-  constructor(call: SetPositionsCall) {
+  constructor(call: RecieveERC20Call) {
+    this._call = call;
+  }
+
+  get _value(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+}
+
+export class RecieveERC20Call__Outputs {
+  _call: RecieveERC20Call;
+
+  constructor(call: RecieveERC20Call) {
     this._call = call;
   }
 }
 
-export class SetPositionsCall__Outputs {
-  _call: SetPositionsCall;
+export class TransferCTCall extends ethereum.Call {
+  get inputs(): TransferCTCall__Inputs {
+    return new TransferCTCall__Inputs(this);
+  }
 
-  constructor(call: SetPositionsCall) {
-    this._call = call;
+  get outputs(): TransferCTCall__Outputs {
+    return new TransferCTCall__Outputs(this);
   }
 }
 
-export class TransferCTtoBidderCall extends ethereum.Call {
-  get inputs(): TransferCTtoBidderCall__Inputs {
-    return new TransferCTtoBidderCall__Inputs(this);
-  }
+export class TransferCTCall__Inputs {
+  _call: TransferCTCall;
 
-  get outputs(): TransferCTtoBidderCall__Outputs {
-    return new TransferCTtoBidderCall__Outputs(this);
-  }
-}
-
-export class TransferCTtoBidderCall__Inputs {
-  _call: TransferCTtoBidderCall;
-
-  constructor(call: TransferCTtoBidderCall) {
+  constructor(call: TransferCTCall) {
     this._call = call;
   }
 
@@ -569,10 +742,10 @@ export class TransferCTtoBidderCall__Inputs {
   }
 }
 
-export class TransferCTtoBidderCall__Outputs {
-  _call: TransferCTtoBidderCall;
+export class TransferCTCall__Outputs {
+  _call: TransferCTCall;
 
-  constructor(call: TransferCTtoBidderCall) {
+  constructor(call: TransferCTCall) {
     this._call = call;
   }
 }

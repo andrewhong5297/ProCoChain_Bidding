@@ -35,12 +35,20 @@ export class NewProject__Params {
     return this._event.parameters[2].value.toAddress();
   }
 
-  get speedtargets(): Array<BigInt> {
+  get bountySpeedTargets(): Array<BigInt> {
     return this._event.parameters[3].value.toBigIntArray();
   }
 
-  get targetbounties(): Array<BigInt> {
+  get targeBounties(): Array<BigInt> {
     return this._event.parameters[4].value.toBigIntArray();
+  }
+
+  get streamSpeedTarget(): BigInt {
+    return this._event.parameters[5].value.toBigInt();
+  }
+
+  get streamAmountTotal(): BigInt {
+    return this._event.parameters[6].value.toBigInt();
   }
 }
 
@@ -69,21 +77,27 @@ export class BidTrackerFactory extends ethereum.SmartContract {
   deployNewProject(
     _owner: Address,
     _ConditionalTokens: Address,
-    _Sablier: Address,
+    _Superfluid: Address,
+    _ERC20: Address,
     _name: string,
-    _speedtargets: Array<BigInt>,
-    _bounties: Array<BigInt>
+    _bountySpeedTargets: Array<BigInt>,
+    _bounties: Array<BigInt>,
+    _streamSpeedTarget: BigInt,
+    _streamAmountTotal: BigInt
   ): Address {
     let result = super.call(
       "deployNewProject",
-      "deployNewProject(address,address,address,string,uint256[],uint256[]):(address)",
+      "deployNewProject(address,address,address,address,string,uint256[],uint256[],uint256,uint256):(address)",
       [
         ethereum.Value.fromAddress(_owner),
         ethereum.Value.fromAddress(_ConditionalTokens),
-        ethereum.Value.fromAddress(_Sablier),
+        ethereum.Value.fromAddress(_Superfluid),
+        ethereum.Value.fromAddress(_ERC20),
         ethereum.Value.fromString(_name),
-        ethereum.Value.fromUnsignedBigIntArray(_speedtargets),
-        ethereum.Value.fromUnsignedBigIntArray(_bounties)
+        ethereum.Value.fromUnsignedBigIntArray(_bountySpeedTargets),
+        ethereum.Value.fromUnsignedBigIntArray(_bounties),
+        ethereum.Value.fromUnsignedBigInt(_streamSpeedTarget),
+        ethereum.Value.fromUnsignedBigInt(_streamAmountTotal)
       ]
     );
 
@@ -93,21 +107,27 @@ export class BidTrackerFactory extends ethereum.SmartContract {
   try_deployNewProject(
     _owner: Address,
     _ConditionalTokens: Address,
-    _Sablier: Address,
+    _Superfluid: Address,
+    _ERC20: Address,
     _name: string,
-    _speedtargets: Array<BigInt>,
-    _bounties: Array<BigInt>
+    _bountySpeedTargets: Array<BigInt>,
+    _bounties: Array<BigInt>,
+    _streamSpeedTarget: BigInt,
+    _streamAmountTotal: BigInt
   ): ethereum.CallResult<Address> {
     let result = super.tryCall(
       "deployNewProject",
-      "deployNewProject(address,address,address,string,uint256[],uint256[]):(address)",
+      "deployNewProject(address,address,address,address,string,uint256[],uint256[],uint256,uint256):(address)",
       [
         ethereum.Value.fromAddress(_owner),
         ethereum.Value.fromAddress(_ConditionalTokens),
-        ethereum.Value.fromAddress(_Sablier),
+        ethereum.Value.fromAddress(_Superfluid),
+        ethereum.Value.fromAddress(_ERC20),
         ethereum.Value.fromString(_name),
-        ethereum.Value.fromUnsignedBigIntArray(_speedtargets),
-        ethereum.Value.fromUnsignedBigIntArray(_bounties)
+        ethereum.Value.fromUnsignedBigIntArray(_bountySpeedTargets),
+        ethereum.Value.fromUnsignedBigIntArray(_bounties),
+        ethereum.Value.fromUnsignedBigInt(_streamSpeedTarget),
+        ethereum.Value.fromUnsignedBigInt(_streamAmountTotal)
       ]
     );
     if (result.reverted) {
@@ -233,20 +253,32 @@ export class DeployNewProjectCall__Inputs {
     return this._call.inputValues[1].value.toAddress();
   }
 
-  get _Sablier(): Address {
+  get _Superfluid(): Address {
     return this._call.inputValues[2].value.toAddress();
   }
 
-  get _name(): string {
-    return this._call.inputValues[3].value.toString();
+  get _ERC20(): Address {
+    return this._call.inputValues[3].value.toAddress();
   }
 
-  get _speedtargets(): Array<BigInt> {
-    return this._call.inputValues[4].value.toBigIntArray();
+  get _name(): string {
+    return this._call.inputValues[4].value.toString();
+  }
+
+  get _bountySpeedTargets(): Array<BigInt> {
+    return this._call.inputValues[5].value.toBigIntArray();
   }
 
   get _bounties(): Array<BigInt> {
-    return this._call.inputValues[5].value.toBigIntArray();
+    return this._call.inputValues[6].value.toBigIntArray();
+  }
+
+  get _streamSpeedTarget(): BigInt {
+    return this._call.inputValues[7].value.toBigInt();
+  }
+
+  get _streamAmountTotal(): BigInt {
+    return this._call.inputValues[8].value.toBigInt();
   }
 }
 

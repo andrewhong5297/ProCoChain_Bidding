@@ -125,6 +125,15 @@ export class Project extends Entity {
       );
     }
   }
+
+  get speedTarget(): BigInt {
+    let value = this.get("speedTarget");
+    return value.toBigInt();
+  }
+
+  set speedTarget(value: BigInt) {
+    this.set("speedTarget", Value.fromBigInt(value));
+  }
 }
 
 export class Bids extends Entity {
@@ -219,5 +228,23 @@ export class Bids extends Entity {
     } else {
       this.set("bountiesBidder", Value.fromBigIntArray(value as Array<BigInt>));
     }
+  }
+
+  get speedTarget(): BigInt {
+    let value = this.get("speedTarget");
+    return value.toBigInt();
+  }
+
+  set speedTarget(value: BigInt) {
+    this.set("speedTarget", Value.fromBigInt(value));
+  }
+
+  get streamAmount(): BigInt {
+    let value = this.get("streamAmount");
+    return value.toBigInt();
+  }
+
+  set streamAmount(value: BigInt) {
+    this.set("streamAmount", Value.fromBigInt(value));
   }
 }

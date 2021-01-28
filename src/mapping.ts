@@ -11,8 +11,9 @@ export function handleNewProject(event: NewProject): void {
   newProject.projectAddress = event.params.project.toHex()
   newProject.name = event.params.name
   newProject.ownerAddress = event.params.owner.toHex()
-  newProject.originalSpeedTargets = event.params.speedtargets
-  newProject.originalBounties = event.params.targetbounties
+  newProject.originalSpeedTargets = event.params.bountySpeedTargets
+  newProject.originalBounties = event.params.targeBounties
+  newProject.speedTarget = event.params.streamSpeedTarget
   newProject.save()
 
   newProjectBids.create(event.params.project) //tracks based on address
@@ -28,7 +29,9 @@ export function handleNewBid(event: newBidSent): void {
   newBid.bidderAddress = event.params.Bidder.toHex()
   newBid.bidDate = event.block.timestamp.toI32()
   newBid.project = project.id
-  newBid.speedTargetsBidder = event.params.speedtargetBidder
-  newBid.bountiesBidder = event.params.targetbountyBidder
+  newBid.speedTargetsBidder = event.params.bountySpeedTargets
+  newBid.bountiesBidder = event.params.bounties
+  newBid.speedTarget = event.params.speedTargetBidder
+  // newBid.streamAmount = event.params. need to add this to event
   newBid.save() //still save in case we want to query all tokens for something
 }

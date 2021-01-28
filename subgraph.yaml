@@ -1,14 +1,14 @@
 specVersion: 0.0.2
 description: SecurityToken for Ethereum
-repository: https://github.com/andrewhong5297/Lucidity-Neg-Tracking
+repository: https://github.com/LucidityDev/ProCoChain_Bidding
 schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
     name: BidTrackerFactory
-    network: mainnet
+    network: rinkeby
     source:
-      address: "0xC1140b6816595fC784544aF73ef7703eeb753d64"
+      address: "0x13e5Cc4beAF377BcC4318A6AB3698CE846f4FA85"
       abi: BidTrackerFactory
       startBlock: 1
     mapping:
@@ -21,13 +21,13 @@ dataSources:
         - name: BidTrackerFactory
           file: ./abis/BidTrackerFactory.json
       eventHandlers:
-        - event: NewProject(string,address,address,uint256[],uint256[])
+        - event: NewProject(string,address,address,uint256[],uint256[],uint256,uint256)
           handler: handleNewProject
       file: ./src/mapping.ts
 templates:
   - kind: ethereum/contract
     name: BidTracker
-    network: mainnet
+    network: rinkeby
     source:
       abi: BidTracker
     mapping:
@@ -40,6 +40,6 @@ templates:
         - name: BidTracker
           file: ./abis/BidTracker.json
       eventHandlers:
-        - event: newBidSent(address,uint256[],uint256[])
+        - event: newBidSent(address,uint256,uint256[],uint256[])
           handler: handleNewBid
       file: ./src/mapping.ts
