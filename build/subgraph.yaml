@@ -1,5 +1,5 @@
 specVersion: 0.0.2
-description: SecurityToken for Ethereum
+description: Lucidity Bidding for ProCoChain/Unicef
 repository: https://github.com/LucidityDev/ProCoChain_Bidding
 schema:
   file: schema.graphql
@@ -8,7 +8,7 @@ dataSources:
     name: BidTrackerFactory
     network: rinkeby
     source:
-      address: "0x13e5Cc4beAF377BcC4318A6AB3698CE846f4FA85"
+      address: "0x4D04c46325CBd5D0160bbf74E65103b3b8709d7B"
       abi: BidTrackerFactory
       startBlock: 1
     mapping:
@@ -21,7 +21,7 @@ dataSources:
         - name: BidTrackerFactory
           file: BidTrackerFactory\abis\BidTrackerFactory.json
       eventHandlers:
-        - event: NewProject(string,address,address,uint256[],uint256[],uint256,uint256)
+        - event: NewProject(string,address,address,uint256[],uint256[],uint256,int96)
           handler: handleNewProject
       file: BidTrackerFactory\BidTrackerFactory.wasm
 templates:

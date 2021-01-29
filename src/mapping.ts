@@ -14,6 +14,7 @@ export function handleNewProject(event: NewProject): void {
   newProject.originalSpeedTargets = event.params.bountySpeedTargets
   newProject.originalBounties = event.params.targeBounties
   newProject.speedTarget = event.params.streamSpeedTarget
+  newProject.streamRate = event.params.streamRate
   newProject.save()
 
   newProjectBids.create(event.params.project) //tracks based on address
@@ -32,6 +33,5 @@ export function handleNewBid(event: newBidSent): void {
   newBid.speedTargetsBidder = event.params.bountySpeedTargets
   newBid.bountiesBidder = event.params.bounties
   newBid.speedTarget = event.params.speedTargetBidder
-  // newBid.streamAmount = event.params. need to add this to event
   newBid.save() //still save in case we want to query all tokens for something
 }

@@ -7,6 +7,7 @@ type Project @entity {
   originalSpeedTargets: [BigInt!]
   originalBounties: [BigInt!]
   speedTarget: BigInt!
+  streamRate: BigInt!
 }
 
 type Bids @entity {
@@ -17,5 +18,4 @@ type Bids @entity {
   speedTargetsBidder: [BigInt!]
   bountiesBidder: [BigInt!]
   speedTarget: BigInt!
-  streamAmount: BigInt!
 }

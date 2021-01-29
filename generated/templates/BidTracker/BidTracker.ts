@@ -81,7 +81,7 @@ export class BidTracker__loadBidderTermsResult {
     map.set("value0", ethereum.Value.fromUnsignedBigIntArray(this.value0));
     map.set("value1", ethereum.Value.fromUnsignedBigIntArray(this.value1));
     map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
-    map.set("value3", ethereum.Value.fromUnsignedBigInt(this.value3));
+    map.set("value3", ethereum.Value.fromSignedBigInt(this.value3));
     return map;
   }
 }
@@ -109,7 +109,7 @@ export class BidTracker__loadOwnerTermsResult {
     map.set("value0", ethereum.Value.fromUnsignedBigIntArray(this.value0));
     map.set("value1", ethereum.Value.fromUnsignedBigIntArray(this.value1));
     map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
-    map.set("value3", ethereum.Value.fromUnsignedBigInt(this.value3));
+    map.set("value3", ethereum.Value.fromSignedBigInt(this.value3));
     return map;
   }
 }
@@ -208,7 +208,7 @@ export class BidTracker extends ethereum.SmartContract {
   loadBidderTerms(_bidder: Address): BidTracker__loadBidderTermsResult {
     let result = super.call(
       "loadBidderTerms",
-      "loadBidderTerms(address):(uint256[],uint256[],uint256,uint256)",
+      "loadBidderTerms(address):(uint256[],uint256[],uint256,int96)",
       [ethereum.Value.fromAddress(_bidder)]
     );
 
@@ -225,7 +225,7 @@ export class BidTracker extends ethereum.SmartContract {
   ): ethereum.CallResult<BidTracker__loadBidderTermsResult> {
     let result = super.tryCall(
       "loadBidderTerms",
-      "loadBidderTerms(address):(uint256[],uint256[],uint256,uint256)",
+      "loadBidderTerms(address):(uint256[],uint256[],uint256,int96)",
       [ethereum.Value.fromAddress(_bidder)]
     );
     if (result.reverted) {
@@ -245,7 +245,7 @@ export class BidTracker extends ethereum.SmartContract {
   loadOwnerTerms(): BidTracker__loadOwnerTermsResult {
     let result = super.call(
       "loadOwnerTerms",
-      "loadOwnerTerms():(uint256[],uint256[],uint256,uint256)",
+      "loadOwnerTerms():(uint256[],uint256[],uint256,int96)",
       []
     );
 
@@ -260,7 +260,7 @@ export class BidTracker extends ethereum.SmartContract {
   try_loadOwnerTerms(): ethereum.CallResult<BidTracker__loadOwnerTermsResult> {
     let result = super.tryCall(
       "loadOwnerTerms",
-      "loadOwnerTerms():(uint256[],uint256[],uint256,uint256)",
+      "loadOwnerTerms():(uint256[],uint256[],uint256,int96)",
       []
     );
     if (result.reverted) {
@@ -341,6 +341,29 @@ export class BidTracker extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toString());
   }
 
+  securityDeposit(): BigInt {
+    let result = super.call(
+      "securityDeposit",
+      "securityDeposit():(uint256)",
+      []
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_securityDeposit(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "securityDeposit",
+      "securityDeposit():(uint256)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
   speedTargetOwner(): BigInt {
     let result = super.call(
       "speedTargetOwner",
@@ -364,20 +387,16 @@ export class BidTracker extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  streamAmountOwner(): BigInt {
-    let result = super.call(
-      "streamAmountOwner",
-      "streamAmountOwner():(uint256)",
-      []
-    );
+  streamRateOwner(): BigInt {
+    let result = super.call("streamRateOwner", "streamRateOwner():(int96)", []);
 
     return result[0].toBigInt();
   }
 
-  try_streamAmountOwner(): ethereum.CallResult<BigInt> {
+  try_streamRateOwner(): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
-      "streamAmountOwner",
-      "streamAmountOwner():(uint256)",
+      "streamRateOwner",
+      "streamRateOwner():(int96)",
       []
     );
     if (result.reverted) {
@@ -459,28 +478,32 @@ export class ConstructorCall__Inputs {
     return this._call.inputValues[2].value.toAddress();
   }
 
-  get _ERC20(): Address {
+  get _CFA(): Address {
     return this._call.inputValues[3].value.toAddress();
   }
 
+  get _ERC20(): Address {
+    return this._call.inputValues[4].value.toAddress();
+  }
+
   get _name(): string {
-    return this._call.inputValues[4].value.toString();
+    return this._call.inputValues[5].value.toString();
   }
 
   get _bountySpeedTargets(): Array<BigInt> {
-    return this._call.inputValues[5].value.toBigIntArray();
-  }
-
-  get _bounties(): Array<BigInt> {
     return this._call.inputValues[6].value.toBigIntArray();
   }
 
-  get _streamSpeedTarget(): BigInt {
-    return this._call.inputValues[7].value.toBigInt();
+  get _bounties(): Array<BigInt> {
+    return this._call.inputValues[7].value.toBigIntArray();
   }
 
-  get _streamAmountTotal(): BigInt {
+  get _streamSpeedTarget(): BigInt {
     return this._call.inputValues[8].value.toBigInt();
+  }
+
+  get _streamRate(): BigInt {
+    return this._call.inputValues[9].value.toBigInt();
   }
 }
 
@@ -515,10 +538,6 @@ export class ApproveBidderTermsCall__Inputs {
 
   get token(): Address {
     return this._call.inputValues[1].value.toAddress();
-  }
-
-  get endTime(): BigInt {
-    return this._call.inputValues[2].value.toBigInt();
   }
 }
 
@@ -631,12 +650,8 @@ export class EndFlowCall__Inputs {
     return this._call.inputValues[0].value.toAddress();
   }
 
-  get sender(): Address {
-    return this._call.inputValues[1].value.toAddress();
-  }
-
   get receiver(): Address {
-    return this._call.inputValues[2].value.toAddress();
+    return this._call.inputValues[1].value.toAddress();
   }
 }
 
@@ -677,7 +692,7 @@ export class NewBidderTermsCall__Inputs {
     return this._call.inputValues[2].value.toBigInt();
   }
 
-  get _streamAmountTotal(): BigInt {
+  get _streamRate(): BigInt {
     return this._call.inputValues[3].value.toBigInt();
   }
 }

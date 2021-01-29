@@ -134,6 +134,15 @@ export class Project extends Entity {
   set speedTarget(value: BigInt) {
     this.set("speedTarget", Value.fromBigInt(value));
   }
+
+  get streamRate(): BigInt {
+    let value = this.get("streamRate");
+    return value.toBigInt();
+  }
+
+  set streamRate(value: BigInt) {
+    this.set("streamRate", Value.fromBigInt(value));
+  }
 }
 
 export class Bids extends Entity {
@@ -239,12 +248,12 @@ export class Bids extends Entity {
     this.set("speedTarget", Value.fromBigInt(value));
   }
 
-  get streamAmount(): BigInt {
-    let value = this.get("streamAmount");
+  get streamRate(): BigInt {
+    let value = this.get("streamRate");
     return value.toBigInt();
   }
 
-  set streamAmount(value: BigInt) {
-    this.set("streamAmount", Value.fromBigInt(value));
+  set streamRate(value: BigInt) {
+    this.set("streamRate", Value.fromBigInt(value));
   }
 }

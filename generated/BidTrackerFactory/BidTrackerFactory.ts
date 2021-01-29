@@ -47,7 +47,7 @@ export class NewProject__Params {
     return this._event.parameters[5].value.toBigInt();
   }
 
-  get streamAmountTotal(): BigInt {
+  get streamRate(): BigInt {
     return this._event.parameters[6].value.toBigInt();
   }
 }
@@ -78,26 +78,28 @@ export class BidTrackerFactory extends ethereum.SmartContract {
     _owner: Address,
     _ConditionalTokens: Address,
     _Superfluid: Address,
+    _CFA: Address,
     _ERC20: Address,
     _name: string,
     _bountySpeedTargets: Array<BigInt>,
     _bounties: Array<BigInt>,
     _streamSpeedTarget: BigInt,
-    _streamAmountTotal: BigInt
+    _streamRate: BigInt
   ): Address {
     let result = super.call(
       "deployNewProject",
-      "deployNewProject(address,address,address,address,string,uint256[],uint256[],uint256,uint256):(address)",
+      "deployNewProject(address,address,address,address,address,string,uint256[],uint256[],uint256,int96):(address)",
       [
         ethereum.Value.fromAddress(_owner),
         ethereum.Value.fromAddress(_ConditionalTokens),
         ethereum.Value.fromAddress(_Superfluid),
+        ethereum.Value.fromAddress(_CFA),
         ethereum.Value.fromAddress(_ERC20),
         ethereum.Value.fromString(_name),
         ethereum.Value.fromUnsignedBigIntArray(_bountySpeedTargets),
         ethereum.Value.fromUnsignedBigIntArray(_bounties),
         ethereum.Value.fromUnsignedBigInt(_streamSpeedTarget),
-        ethereum.Value.fromUnsignedBigInt(_streamAmountTotal)
+        ethereum.Value.fromSignedBigInt(_streamRate)
       ]
     );
 
@@ -108,26 +110,28 @@ export class BidTrackerFactory extends ethereum.SmartContract {
     _owner: Address,
     _ConditionalTokens: Address,
     _Superfluid: Address,
+    _CFA: Address,
     _ERC20: Address,
     _name: string,
     _bountySpeedTargets: Array<BigInt>,
     _bounties: Array<BigInt>,
     _streamSpeedTarget: BigInt,
-    _streamAmountTotal: BigInt
+    _streamRate: BigInt
   ): ethereum.CallResult<Address> {
     let result = super.tryCall(
       "deployNewProject",
-      "deployNewProject(address,address,address,address,string,uint256[],uint256[],uint256,uint256):(address)",
+      "deployNewProject(address,address,address,address,address,string,uint256[],uint256[],uint256,int96):(address)",
       [
         ethereum.Value.fromAddress(_owner),
         ethereum.Value.fromAddress(_ConditionalTokens),
         ethereum.Value.fromAddress(_Superfluid),
+        ethereum.Value.fromAddress(_CFA),
         ethereum.Value.fromAddress(_ERC20),
         ethereum.Value.fromString(_name),
         ethereum.Value.fromUnsignedBigIntArray(_bountySpeedTargets),
         ethereum.Value.fromUnsignedBigIntArray(_bounties),
         ethereum.Value.fromUnsignedBigInt(_streamSpeedTarget),
-        ethereum.Value.fromUnsignedBigInt(_streamAmountTotal)
+        ethereum.Value.fromSignedBigInt(_streamRate)
       ]
     );
     if (result.reverted) {
@@ -257,28 +261,32 @@ export class DeployNewProjectCall__Inputs {
     return this._call.inputValues[2].value.toAddress();
   }
 
-  get _ERC20(): Address {
+  get _CFA(): Address {
     return this._call.inputValues[3].value.toAddress();
   }
 
+  get _ERC20(): Address {
+    return this._call.inputValues[4].value.toAddress();
+  }
+
   get _name(): string {
-    return this._call.inputValues[4].value.toString();
+    return this._call.inputValues[5].value.toString();
   }
 
   get _bountySpeedTargets(): Array<BigInt> {
-    return this._call.inputValues[5].value.toBigIntArray();
-  }
-
-  get _bounties(): Array<BigInt> {
     return this._call.inputValues[6].value.toBigIntArray();
   }
 
-  get _streamSpeedTarget(): BigInt {
-    return this._call.inputValues[7].value.toBigInt();
+  get _bounties(): Array<BigInt> {
+    return this._call.inputValues[7].value.toBigIntArray();
   }
 
-  get _streamAmountTotal(): BigInt {
+  get _streamSpeedTarget(): BigInt {
     return this._call.inputValues[8].value.toBigInt();
+  }
+
+  get _streamRate(): BigInt {
+    return this._call.inputValues[9].value.toBigInt();
   }
 }
 

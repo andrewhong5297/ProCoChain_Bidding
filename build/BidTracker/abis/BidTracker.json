@@ -18,6 +18,11 @@
       },
       {
         "internalType": "address",
+        "name": "_CFA",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
         "name": "_ERC20",
         "type": "address"
       },
@@ -42,9 +47,9 @@
         "type": "uint256"
       },
       {
-        "internalType": "uint256",
-        "name": "_streamAmountTotal",
-        "type": "uint256"
+        "internalType": "int96",
+        "name": "_streamRate",
+        "type": "int96"
       }
     ],
     "stateMutability": "nonpayable",
@@ -121,14 +126,9 @@
         "type": "address"
       },
       {
-        "internalType": "contract ISuperToken",
+        "internalType": "address",
         "name": "token",
         "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "endTime",
-        "type": "uint256"
       }
     ],
     "name": "approveBidderTerms",
@@ -228,13 +228,8 @@
   {
     "inputs": [
       {
-        "internalType": "contract ISuperToken",
-        "name": "token",
-        "type": "address"
-      },
-      {
         "internalType": "address",
-        "name": "sender",
+        "name": "token",
         "type": "address"
       },
       {
@@ -287,9 +282,9 @@
         "type": "uint256"
       },
       {
-        "internalType": "uint256",
+        "internalType": "int96",
         "name": "_streamAmountTotal",
-        "type": "uint256"
+        "type": "int96"
       }
     ],
     "stateMutability": "view",
@@ -315,9 +310,9 @@
         "type": "uint256"
       },
       {
-        "internalType": "uint256",
+        "internalType": "int96",
         "name": "_streamAmountTotal",
-        "type": "uint256"
+        "type": "int96"
       }
     ],
     "stateMutability": "view",
@@ -341,9 +336,9 @@
         "type": "uint256"
       },
       {
-        "internalType": "uint256",
-        "name": "_streamAmountTotal",
-        "type": "uint256"
+        "internalType": "int96",
+        "name": "_streamRate",
+        "type": "int96"
       }
     ],
     "name": "newBidderTerms",
@@ -418,6 +413,19 @@
   },
   {
     "inputs": [],
+    "name": "securityDeposit",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "speedTargetOwner",
     "outputs": [
       {
@@ -431,12 +439,12 @@
   },
   {
     "inputs": [],
-    "name": "streamAmountOwner",
+    "name": "streamRateOwner",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "int96",
         "name": "",
-        "type": "uint256"
+        "type": "int96"
       }
     ],
     "stateMutability": "view",

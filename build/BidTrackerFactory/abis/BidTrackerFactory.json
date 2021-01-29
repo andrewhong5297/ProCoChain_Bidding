@@ -40,9 +40,9 @@
       },
       {
         "indexed": false,
-        "internalType": "uint256",
-        "name": "streamAmountTotal",
-        "type": "uint256"
+        "internalType": "int96",
+        "name": "streamRate",
+        "type": "int96"
       }
     ],
     "name": "NewProject",
@@ -63,6 +63,11 @@
       {
         "internalType": "address",
         "name": "_Superfluid",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_CFA",
         "type": "address"
       },
       {
@@ -91,9 +96,9 @@
         "type": "uint256"
       },
       {
-        "internalType": "uint256",
-        "name": "_streamAmountTotal",
-        "type": "uint256"
+        "internalType": "int96",
+        "name": "_streamRate",
+        "type": "int96"
       }
     ],
     "name": "deployNewProject",
