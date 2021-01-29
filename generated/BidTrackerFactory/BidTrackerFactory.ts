@@ -43,12 +43,16 @@ export class NewProject__Params {
     return this._event.parameters[4].value.toBigIntArray();
   }
 
-  get streamSpeedTarget(): BigInt {
+  get wifiSpeedTarget(): BigInt {
     return this._event.parameters[5].value.toBigInt();
   }
 
   get streamRate(): BigInt {
     return this._event.parameters[6].value.toBigInt();
+  }
+
+  get createdAt(): BigInt {
+    return this._event.parameters[7].value.toBigInt();
   }
 }
 
@@ -83,7 +87,7 @@ export class BidTrackerFactory extends ethereum.SmartContract {
     _name: string,
     _bountySpeedTargets: Array<BigInt>,
     _bounties: Array<BigInt>,
-    _streamSpeedTarget: BigInt,
+    _wifiSpeedTarget: BigInt,
     _streamRate: BigInt
   ): Address {
     let result = super.call(
@@ -98,7 +102,7 @@ export class BidTrackerFactory extends ethereum.SmartContract {
         ethereum.Value.fromString(_name),
         ethereum.Value.fromUnsignedBigIntArray(_bountySpeedTargets),
         ethereum.Value.fromUnsignedBigIntArray(_bounties),
-        ethereum.Value.fromUnsignedBigInt(_streamSpeedTarget),
+        ethereum.Value.fromUnsignedBigInt(_wifiSpeedTarget),
         ethereum.Value.fromSignedBigInt(_streamRate)
       ]
     );
@@ -115,7 +119,7 @@ export class BidTrackerFactory extends ethereum.SmartContract {
     _name: string,
     _bountySpeedTargets: Array<BigInt>,
     _bounties: Array<BigInt>,
-    _streamSpeedTarget: BigInt,
+    _wifiSpeedTarget: BigInt,
     _streamRate: BigInt
   ): ethereum.CallResult<Address> {
     let result = super.tryCall(
@@ -130,7 +134,7 @@ export class BidTrackerFactory extends ethereum.SmartContract {
         ethereum.Value.fromString(_name),
         ethereum.Value.fromUnsignedBigIntArray(_bountySpeedTargets),
         ethereum.Value.fromUnsignedBigIntArray(_bounties),
-        ethereum.Value.fromUnsignedBigInt(_streamSpeedTarget),
+        ethereum.Value.fromUnsignedBigInt(_wifiSpeedTarget),
         ethereum.Value.fromSignedBigInt(_streamRate)
       ]
     );
@@ -281,7 +285,7 @@ export class DeployNewProjectCall__Inputs {
     return this._call.inputValues[7].value.toBigIntArray();
   }
 
-  get _streamSpeedTarget(): BigInt {
+  get _wifiSpeedTarget(): BigInt {
     return this._call.inputValues[8].value.toBigInt();
   }
 

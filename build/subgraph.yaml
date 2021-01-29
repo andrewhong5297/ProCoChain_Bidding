@@ -8,9 +8,9 @@ dataSources:
     name: BidTrackerFactory
     network: rinkeby
     source:
-      address: "0x4D04c46325CBd5D0160bbf74E65103b3b8709d7B"
+      address: "0xDE7D9461b1B6695b8363d512c8b0FfB2A6D1D106"
       abi: BidTrackerFactory
-      startBlock: 1
+      startBlock: 100
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -21,7 +21,7 @@ dataSources:
         - name: BidTrackerFactory
           file: BidTrackerFactory\abis\BidTrackerFactory.json
       eventHandlers:
-        - event: NewProject(string,address,address,uint256[],uint256[],uint256,int96)
+        - event: NewProject(string,address,address,uint256[],uint256[],uint256,int96,uint256)
           handler: handleNewProject
       file: BidTrackerFactory\BidTrackerFactory.wasm
 templates:
@@ -40,6 +40,8 @@ templates:
         - name: BidTracker
           file: BidTracker\abis\BidTracker.json
       eventHandlers:
-        - event: newBidSent(address,uint256,uint256[],uint256[])
+        - event: newBidSent(address,int96,uint256,uint256[],uint256[],uint256)
           handler: handleNewBid
+        - event: currentTermsApproved(address,uint256,int96,uint256[],uint256[],uint256)
+          handler: handleApproval
       file: BidTrackerFactory\BidTrackerFactory.wasm

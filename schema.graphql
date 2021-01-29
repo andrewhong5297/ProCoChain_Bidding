@@ -4,10 +4,12 @@ type Project @entity {
   ownerAddress: ID!
   projectAddress: ID!
   allBids: [Bids!] @derivedFrom(field: "project")
+  approval: Approval! @derivedFrom(field: "project")
   originalSpeedTargets: [BigInt!]
   originalBounties: [BigInt!]
-  speedTarget: BigInt!
+  wifiSpeed: BigInt!
   streamRate: BigInt!
+  createdAt: BigInt!
 }
 
 type Bids @entity {
@@ -18,4 +20,17 @@ type Bids @entity {
   speedTargetsBidder: [BigInt!]
   bountiesBidder: [BigInt!]
   speedTarget: BigInt!
+  streamRate: BigInt!
+  createdAt: BigInt!
+}
+
+type Approval @entity {
+  id: ID!
+  project: Project!
+  winningBidder: ID!
+  finalWifiSpeed: BigInt!
+  finalStreamSpeed: BigInt!
+  finalSpeedTargets: [BigInt!]
+  finalBounties: [BigInt!]
+  createdAt: BigInt!
 }

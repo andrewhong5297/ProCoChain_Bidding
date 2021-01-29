@@ -1,7 +1,7 @@
 import {DataSourceTemplate, log } from "@graphprotocol/graph-ts" 
-import { newBidSent } from '../generated/templates/BidTracker/BidTracker' //event
+import { currentTermsApproved, newBidSent } from '../generated/templates/BidTracker/BidTracker' //event
 import { NewProject } from '../generated/BidTrackerFactory/BidTrackerFactory' //event
-import { Bids, Project } from '../generated/schema' //entities
+import { Bids, Project, Approval } from '../generated/schema' //entities
 import { BidTracker as newProjectBids } from '../generated/templates' //templates
 
 export function handleNewProject(event: NewProject): void {
@@ -13,8 +13,9 @@ export function handleNewProject(event: NewProject): void {
   newProject.ownerAddress = event.params.owner.toHex()
   newProject.originalSpeedTargets = event.params.bountySpeedTargets
   newProject.originalBounties = event.params.targeBounties
-  newProject.speedTarget = event.params.streamSpeedTarget
+  newProject.wifiSpeed = event.params.wifiSpeedTarget
   newProject.streamRate = event.params.streamRate
+  newProject.createdAt = event.params.createdAt
   newProject.save()
 
   newProjectBids.create(event.params.project) //tracks based on address
@@ -22,7 +23,7 @@ export function handleNewProject(event: NewProject): void {
 
 export function handleNewBid(event: newBidSent): void {
   //we need to connect it here
-  let projectID = event.address.toHexString() //should be called from project address?
+  let projectID = event.address.toHexString() //should be called from project address
   let project = Project.load(projectID)
 
   let newBid = new Bids(event.params.Bidder.toHex())
@@ -32,6 +33,25 @@ export function handleNewBid(event: newBidSent): void {
   newBid.project = project.id
   newBid.speedTargetsBidder = event.params.bountySpeedTargets
   newBid.bountiesBidder = event.params.bounties
-  newBid.speedTarget = event.params.speedTargetBidder
-  newBid.save() //still save in case we want to query all tokens for something
+  newBid.speedTarget = event.params.wifiSpeedBidder
+  newBid.streamRate = event.params.streamRateBidder
+  newBid.createdAt = event.params.createdAt
+  newBid.save() 
+}
+
+export function handleApproval(event: currentTermsApproved): void {
+  //we need to connect it here
+  let projectID = event.address.toHexString() //should be called from project address
+  let project = Project.load(projectID)
+
+  let approval = new Approval(event.address.toHex())
+  log.info("approval of project at address: {}", [event.params.approvedBidder.toHexString()])
+  approval.project = project.id
+  approval.winningBidder = event.params.approvedBidder.toHex()
+  approval.finalWifiSpeed = event.params.finalWifiSpeed
+  approval.finalStreamSpeed = event.params.finalStreamRate
+  approval.finalSpeedTargets = event.params.finalTargetSpeeds
+  approval.finalBounties = event.params.finalBounties
+  approval.createdAt = event.params.createdAt
+  approval.save() 
 }

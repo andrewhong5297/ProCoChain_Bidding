@@ -35,7 +35,7 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "streamSpeedTarget",
+        "name": "wifiSpeedTarget",
         "type": "uint256"
       },
       {
@@ -43,6 +43,12 @@
         "internalType": "int96",
         "name": "streamRate",
         "type": "int96"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "createdAt",
+        "type": "uint256"
       }
     ],
     "name": "NewProject",
@@ -92,7 +98,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "_streamSpeedTarget",
+        "name": "_wifiSpeedTarget",
         "type": "uint256"
       },
       {

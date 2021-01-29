@@ -86,6 +86,15 @@ export class Project extends Entity {
     }
   }
 
+  get approval(): string {
+    let value = this.get("approval");
+    return value.toString();
+  }
+
+  set approval(value: string) {
+    this.set("approval", Value.fromString(value));
+  }
+
   get originalSpeedTargets(): Array<BigInt> | null {
     let value = this.get("originalSpeedTargets");
     if (value === null || value.kind == ValueKind.NULL) {
@@ -126,13 +135,13 @@ export class Project extends Entity {
     }
   }
 
-  get speedTarget(): BigInt {
-    let value = this.get("speedTarget");
+  get wifiSpeed(): BigInt {
+    let value = this.get("wifiSpeed");
     return value.toBigInt();
   }
 
-  set speedTarget(value: BigInt) {
-    this.set("speedTarget", Value.fromBigInt(value));
+  set wifiSpeed(value: BigInt) {
+    this.set("wifiSpeed", Value.fromBigInt(value));
   }
 
   get streamRate(): BigInt {
@@ -142,6 +151,15 @@ export class Project extends Entity {
 
   set streamRate(value: BigInt) {
     this.set("streamRate", Value.fromBigInt(value));
+  }
+
+  get createdAt(): BigInt {
+    let value = this.get("createdAt");
+    return value.toBigInt();
+  }
+
+  set createdAt(value: BigInt) {
+    this.set("createdAt", Value.fromBigInt(value));
   }
 }
 
@@ -255,5 +273,127 @@ export class Bids extends Entity {
 
   set streamRate(value: BigInt) {
     this.set("streamRate", Value.fromBigInt(value));
+  }
+
+  get createdAt(): BigInt {
+    let value = this.get("createdAt");
+    return value.toBigInt();
+  }
+
+  set createdAt(value: BigInt) {
+    this.set("createdAt", Value.fromBigInt(value));
+  }
+}
+
+export class Approval extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id !== null, "Cannot save Approval entity without an ID");
+    assert(
+      id.kind == ValueKind.STRING,
+      "Cannot save Approval entity with non-string ID. " +
+        'Considering using .toHex() to convert the "id" to a string.'
+    );
+    store.set("Approval", id.toString(), this);
+  }
+
+  static load(id: string): Approval | null {
+    return store.get("Approval", id) as Approval | null;
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get project(): string {
+    let value = this.get("project");
+    return value.toString();
+  }
+
+  set project(value: string) {
+    this.set("project", Value.fromString(value));
+  }
+
+  get winningBidder(): string {
+    let value = this.get("winningBidder");
+    return value.toString();
+  }
+
+  set winningBidder(value: string) {
+    this.set("winningBidder", Value.fromString(value));
+  }
+
+  get finalWifiSpeed(): BigInt {
+    let value = this.get("finalWifiSpeed");
+    return value.toBigInt();
+  }
+
+  set finalWifiSpeed(value: BigInt) {
+    this.set("finalWifiSpeed", Value.fromBigInt(value));
+  }
+
+  get finalStreamSpeed(): BigInt {
+    let value = this.get("finalStreamSpeed");
+    return value.toBigInt();
+  }
+
+  set finalStreamSpeed(value: BigInt) {
+    this.set("finalStreamSpeed", Value.fromBigInt(value));
+  }
+
+  get finalSpeedTargets(): Array<BigInt> | null {
+    let value = this.get("finalSpeedTargets");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigIntArray();
+    }
+  }
+
+  set finalSpeedTargets(value: Array<BigInt> | null) {
+    if (value === null) {
+      this.unset("finalSpeedTargets");
+    } else {
+      this.set(
+        "finalSpeedTargets",
+        Value.fromBigIntArray(value as Array<BigInt>)
+      );
+    }
+  }
+
+  get finalBounties(): Array<BigInt> | null {
+    let value = this.get("finalBounties");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigIntArray();
+    }
+  }
+
+  set finalBounties(value: Array<BigInt> | null) {
+    if (value === null) {
+      this.unset("finalBounties");
+    } else {
+      this.set("finalBounties", Value.fromBigIntArray(value as Array<BigInt>));
+    }
+  }
+
+  get createdAt(): BigInt {
+    let value = this.get("createdAt");
+    return value.toBigInt();
+  }
+
+  set createdAt(value: BigInt) {
+    this.set("createdAt", Value.fromBigInt(value));
   }
 }
