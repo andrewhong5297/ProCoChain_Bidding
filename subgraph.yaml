@@ -8,7 +8,7 @@ dataSources:
     name: BidTrackerFactory
     network: rinkeby
     source:
-      address: "0x4D04c46325CBd5D0160bbf74E65103b3b8709d7B"
+      address: "0xDE7D9461b1B6695b8363d512c8b0FfB2A6D1D106"
       abi: BidTrackerFactory
       startBlock: 1
     mapping:
