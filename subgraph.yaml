@@ -1,6 +1,6 @@
 specVersion: 0.0.2
 description: Lucidity Bidding for ProCoChain/Unicef
-repository: https://github.com/LucidityDev/ProCoChain_Bidding
+repository: https://github.com/andrewhong5297/ProCoChain_Bidding
 schema:
   file: ./schema.graphql
 dataSources:
