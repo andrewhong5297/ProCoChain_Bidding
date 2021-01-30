@@ -86,13 +86,21 @@ export class Project extends Entity {
     }
   }
 
-  get approval(): string {
+  get approval(): string | null {
     let value = this.get("approval");
-    return value.toString();
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
   }
 
-  set approval(value: string) {
-    this.set("approval", Value.fromString(value));
+  set approval(value: string | null) {
+    if (value === null) {
+      this.unset("approval");
+    } else {
+      this.set("approval", Value.fromString(value as string));
+    }
   }
 
   get originalSpeedTargets(): Array<BigInt> | null {

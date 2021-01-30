@@ -4,7 +4,7 @@ type Project @entity {
   ownerAddress: ID!
   projectAddress: ID!
   allBids: [Bids!] @derivedFrom(field: "project")
-  approval: Approval! @derivedFrom(field: "project")
+  approval: Approval @derivedFrom(field: "project")
   originalSpeedTargets: [BigInt!]
   originalBounties: [BigInt!]
   wifiSpeed: BigInt!
