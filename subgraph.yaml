@@ -6,9 +6,9 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: BidTrackerFactory
-    network: rinkeby
+    network: goerli
     source:
-      address: "0x7697aC32BD4cF0cAe881b93BFc8D168d5352741B"
+      address: "0x2BABA5Cadf0f8AbB8A145A9824c2972a08edD2c0"
       abi: BidTrackerFactory
       startBlock: 100
     mapping:
@@ -27,7 +27,7 @@ dataSources:
 templates:
   - kind: ethereum/contract
     name: BidTracker
-    network: rinkeby
+    network: goerli
     source:
       abi: BidTracker
     mapping:
